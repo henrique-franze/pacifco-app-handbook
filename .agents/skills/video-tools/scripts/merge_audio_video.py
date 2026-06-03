@@ -6,6 +6,20 @@ import shutil
 import argparse
 import re
 
+def get_audio_duration(audio_path):
+    cmd = [
+        "ffprobe", "-v", "error",
+        "-show_entries", "format=duration",
+        "-of", "default=noprint_wrappers=1:nokey=1",
+        audio_path
+    ]
+    try:
+        output = subprocess.check_output(cmd).decode('utf-8').strip()
+        return float(output)
+    except Exception as e:
+        print(f"Erro ao obter duração do áudio: {e}")
+        return None
+
 def parse_srt(srt_path):
     with open(srt_path, 'r', encoding='utf-8') as f:
         content = f.read().strip()
@@ -37,26 +51,33 @@ def merge_webp_audio(webp_path, audio_path, output_mp4, srt_path=None):
         print(f"Lidos {len(subs)} blocos de legenda. Vamos queimar direto nas imagens!")
     
     try:
-        # Tenta usar a fonte Helvetica do Mac para ficar bonito
         font = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 48)
     except:
         font = ImageFont.load_default()
         
-    durations = []
     temp_dir = tempfile.mkdtemp()
+    
+    # === Sincronização Dinâmica (Linear Warping) ===
+    total_frames = getattr(img, "n_frames", 1)
+    audio_duration = get_audio_duration(audio_path)
+    
+    if audio_duration and audio_duration > 0:
+        target_fps = total_frames / audio_duration
+        print(f"Sincronização Elástica ativada: {total_frames} quadros em {audio_duration:.2f}s de áudio.")
+        print(f"O FPS do vídeo foi reajustado para {target_fps:.2f} para garantir sincronia perfeita.")
+    else:
+        target_fps = 20.0
+        print(f"Aviso: Não foi possível obter a duração do áudio. Usando FPS padrão: {target_fps}")
+        
     try:
         frame_idx = 0
-        current_time_ms = 0
-        max_time_sec = max([sub["end"] for sub in subs]) + 1.0 if subs else 0
-        
         while True:
             frame = img.convert("RGBA")
-            frame_duration = img.info.get('duration', 100)
-            durations.append(frame_duration)
             
-            current_time_sec = current_time_ms / 1000.0
+            # O momento em que este frame vai aparecer no vídeo final
+            current_time_sec = frame_idx / target_fps
             
-            # Checa se há texto para esse exato milissegundo
+            # Checa se há texto para esse exato momento no vídeo
             current_text = None
             for sub in subs:
                 if sub["start"] <= current_time_sec <= sub["end"]:
@@ -64,7 +85,6 @@ def merge_webp_audio(webp_path, audio_path, output_mp4, srt_path=None):
                     break
             
             if current_text:
-                # Cria um frame transparente para desenhar o texto (para o fundo ter alpha)
                 txt_layer = Image.new("RGBA", frame.size, (255, 255, 255, 0))
                 draw = ImageDraw.Draw(txt_layer)
                 
@@ -73,13 +93,11 @@ def merge_webp_audio(webp_path, audio_path, output_mp4, srt_path=None):
                     text_w = text_bbox[2] - text_bbox[0]
                     text_h = text_bbox[3] - text_bbox[1]
                 except AttributeError:
-                    # Fallback para versoes antigas do Pillow
                     text_w, text_h = draw.textsize(current_text, font=font)
                 
                 x = (frame.width - text_w) / 2
                 y = frame.height - text_h - 60
                 
-                # Fundo preto semitransparente para dar leitura
                 draw.rectangle([x - 20, y - 10, x + text_w + 20, y + text_h + 10], fill=(0,0,0,180))
                 draw.text((x, y), current_text, font=font, fill=(255,255,255,255))
                 
@@ -88,28 +106,16 @@ def merge_webp_audio(webp_path, audio_path, output_mp4, srt_path=None):
             frame_path = os.path.join(temp_dir, f"frame_{frame_idx:05d}.png")
             frame.convert("RGB").save(frame_path, "PNG")
             
-            current_time_ms += frame_duration
             frame_idx += 1
             
             try:
                 img.seek(img.tell() + 1)
             except EOFError:
-                # Se o vídeo acabar antes da legenda (áudio mais longo que o webp), 
-                # mantemos o último frame repetindo até a legenda terminar!
-                if (current_time_ms / 1000.0) < max_time_sec:
-                    continue
-                else:
-                    break
+                break
                 
-        total_duration_ms = sum(durations)
-        avg_duration_ms = total_duration_ms / len(durations)
-        fps = 1000.0 / avg_duration_ms
-        
-        print(f"Extraídos {frame_idx} quadros. FPS médio estimado: {fps:.2f}")
-        
         cmd = [
             "ffmpeg", "-y",
-            "-framerate", str(fps),
+            "-framerate", str(target_fps),
             "-i", os.path.join(temp_dir, "frame_%05d.png"),
             "-i", audio_path,
             "-c:v", "libx264",
