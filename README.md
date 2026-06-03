@@ -25,5 +25,6 @@ pip install -r requirements.txt
 ## TO-DO List (Próximas Versões)
 
 Aqui estão as próximas melhorias mapeadas para o projeto:
+- [ ] **Sincronização Dinâmica (Video-Audio Sync)**: O áudio da narração e o tempo do vídeo (WebP) podem ter durações diferentes. Criar uma lógica no orquestrador que divida o vídeo em "passos" e ajuste a velocidade do vídeo trecho-a-trecho para bater exatamente com a duração dos blocos de fala da ElevenLabs (baseado nos tempos do arquivo `.srt`).
 - [ ] **Deploy em Site Estático**: Publicar esta documentação em uma página navegável na web (usando ferramentas como MkDocs ou Docusaurus via GitHub Pages).
 - [ ] **Geração Automática de PDFs**: Criar um script para exportar os tutoriais `.md` formatados em PDF para envio offline.
