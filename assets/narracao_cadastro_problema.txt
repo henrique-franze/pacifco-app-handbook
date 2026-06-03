@@ -1,0 +1,9 @@
+Bem-vindo ao tutorial de como cadastrar um problema no App For Dev Pacífico.
+
+Primeiro, acesse o portal e faça o login com seu e-mail e senha. 
+Após o carregamento da tela principal, expanda o menu lateral, vá na seção Cadastros, clique em Modelos e depois selecione a opção Problemas.
+
+Na tela de listagem de problemas, clique no botão azul Adicionar, localizado no canto superior direito. 
+No formulário que se abrirá, preencha o campo obrigatório Nome. Se você desejar, também é possível detalhar o problema nos campos opcionais de Descrição e Recomendação.
+
+Para finalizar o cadastro, basta clicar no botão Salvar e pronto!

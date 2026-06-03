@@ -1,0 +1,52 @@
+1
+00:00:00,000 --> 00:00:03,472
+Bem-vindo ao tutorial de como cadastrar um problema
+
+2
+00:00:03,530 --> 00:00:07,256
+no App For Dev Pacífico. Primeiro, acesse o
+
+3
+00:00:07,291 --> 00:00:09,508
+portal e faça o login com seu e-mail
+
+4
+00:00:09,578 --> 00:00:13,479
+e senha. Após o carregamento da tela principal,
+
+5
+00:00:13,688 --> 00:00:17,113
+expanda o menu lateral, vá na seção Cadastros,
+
+6
+00:00:17,206 --> 00:00:19,690
+clique em Modelos e depois selecione a opção
+
+7
+00:00:19,725 --> 00:00:23,313
+Problemas. Na tela de listagem de problemas, clique
+
+8
+00:00:23,347 --> 00:00:26,726
+no botão azul Adicionar, localizado no canto superior
+
+9
+00:00:26,784 --> 00:00:30,349
+direito. No formulário que se abrirá, preencha o
+
+10
+00:00:30,418 --> 00:00:34,552
+campo obrigatório Nome. Se você desejar, também é
+
+11
+00:00:34,598 --> 00:00:37,466
+possível detalhar o problema nos campos opcionais de
+
+12
+00:00:37,559 --> 00:00:42,470
+Descrição e Recomendação. Para finalizar o cadastro, basta
+
+13
+00:00:42,504 --> 00:00:46,394
+clicar no botão Salvar e pronto!
+
