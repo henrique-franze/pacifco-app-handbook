@@ -47,6 +47,8 @@ def merge_webp_audio(webp_path, audio_path, output_mp4, srt_path=None):
     try:
         frame_idx = 0
         current_time_ms = 0
+        max_time_sec = max([sub["end"] for sub in subs]) + 1.0 if subs else 0
+        
         while True:
             frame = img.convert("RGBA")
             frame_duration = img.info.get('duration', 100)
@@ -92,7 +94,12 @@ def merge_webp_audio(webp_path, audio_path, output_mp4, srt_path=None):
             try:
                 img.seek(img.tell() + 1)
             except EOFError:
-                break
+                # Se o vídeo acabar antes da legenda (áudio mais longo que o webp), 
+                # mantemos o último frame repetindo até a legenda terminar!
+                if (current_time_ms / 1000.0) < max_time_sec:
+                    continue
+                else:
+                    break
                 
         total_duration_ms = sum(durations)
         avg_duration_ms = total_duration_ms / len(durations)

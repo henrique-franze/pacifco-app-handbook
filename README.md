@@ -11,23 +11,19 @@ Este projeto tem o objetivo de centralizar e automatizar a geração de tutoriai
 
 ---
 
-## TO-DO List e Próximos Passos
+## Arquitetura e Pipeline
+Toda a arquitetura das automações, incluindo geração de voz (ElevenLabs), edição de vídeo WebP e embutimento de legendas via ffmpeg/Pillow, está documentada no arquivo principal de arquitetura:
+👉 **[PIPELINE.md](PIPELINE.md)**
+
+Para gerar os vídeos, existe um orquestrador mestre (`doc-generator`). Antes de executá-lo, instale as dependências:
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## TO-DO List (Próximas Versões)
 
 Aqui estão as próximas melhorias mapeadas para o projeto:
-
-- [ ] **Edição de Vídeo (Corte)**: Criar uma skill (script) capaz de cortar a parte inicial dos vídeos, removendo a etapa de login, para ir direto ao ponto.
-- [ ] **Ajuste de Aceleração**: Testar velocidades maiores que 2x (ex: 3x ou 4x) para deixar os vídeos WebP ainda mais rápidos e objetivos.
-- [ ] **Roteirização**: Gerar os scripts de texto (narração) detalhando cada passo a ser falado nos tutoriais em vídeo.
-- [ ] **Geração de Áudio (TTS)**: Incorporar uma solução de Text-to-Speech para narrar os tutoriais usando voz sintetizada.
 - [ ] **Deploy em Site Estático**: Publicar esta documentação em uma página navegável na web (usando ferramentas como MkDocs ou Docusaurus via GitHub Pages).
 - [ ] **Geração Automática de PDFs**: Criar um script para exportar os tutoriais `.md` formatados em PDF para envio offline.
-
-## Sugestão Prática para Text-to-Speech (TTS)
-
-Para gerar a narração de forma prática e com alta qualidade (item 4):
-1. **gTTS (Google TTS)**: A opção mais fácil e **gratuita** para começar. Podemos fazer um script simples em Python usando a biblioteca `gTTS` que lê o texto e cospe um arquivo `.mp3`.
-2. **ElevenLabs**: A melhor opção do mercado para vozes absurdamente naturais, expressivas e humanas. Excelente para um resultado premium e profissional. Podemos integrar facilmente através da API deles criando uma skill dedicada.
-3. **OpenAI TTS API**: Outra ótima alternativa de alta qualidade (modelo `tts-1`), também com custo muito baixo por minuto de áudio.
-4. **Local (MacOS)**: Se quiser apenas rascunhar sem internet, podemos usar o comando nativo `say` do Mac.
-
-Recomendo começarmos criando uma skill com o **gTTS** (gratuito) para testar o fluxo e, para a versão final de produção, utilizarmos a **ElevenLabs** para garantir a melhor qualidade de narração possível.
