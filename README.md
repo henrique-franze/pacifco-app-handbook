@@ -26,7 +26,8 @@ Aqui estão as próximas melhorias mapeadas para o projeto:
 
 Para gerar a narração de forma prática e com alta qualidade (item 4):
 1. **gTTS (Google TTS)**: A opção mais fácil e **gratuita** para começar. Podemos fazer um script simples em Python usando a biblioteca `gTTS` que lê o texto e cospe um arquivo `.mp3`.
-2. **OpenAI TTS API**: Se quiser uma voz absurdamente natural e humana, usar a API da OpenAI (modelo `tts-1`) ou ElevenLabs é o melhor caminho. O custo é baixíssimo por minuto de áudio e podemos criar uma "skill" do agente para rodar isso com um comando.
-3. **Local (MacOS)**: Se quiser apenas rascunhar sem internet, podemos usar o comando nativo `say` do Mac.
+2. **ElevenLabs**: A melhor opção do mercado para vozes absurdamente naturais, expressivas e humanas. Excelente para um resultado premium e profissional. Podemos integrar facilmente através da API deles criando uma skill dedicada.
+3. **OpenAI TTS API**: Outra ótima alternativa de alta qualidade (modelo `tts-1`), também com custo muito baixo por minuto de áudio.
+4. **Local (MacOS)**: Se quiser apenas rascunhar sem internet, podemos usar o comando nativo `say` do Mac.
 
-Recomendo começarmos criando uma skill com o **gTTS** (gratuito) para testar o fluxo e, se precisarmos de qualidade premium, mudamos para a **OpenAI**.
+Recomendo começarmos criando uma skill com o **gTTS** (gratuito) para testar o fluxo e, para a versão final de produção, utilizarmos a **ElevenLabs** para garantir a melhor qualidade de narração possível.
